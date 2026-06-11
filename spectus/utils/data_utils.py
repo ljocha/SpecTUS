@@ -277,7 +277,8 @@ def build_single_datapipe(json_file: str,
     if preprocess_args:
         datapipe = datapipe.map(lambda x: json.loads(x[1]))
         datapipe = datapipe.map(lambda d: { **d, "invalid": not filter_datapoints(d, preprocess_args) } ) # filter out too long data and stuff
-        datapipe = datapipe.map(lambda d: preprocess_datapoint(d, source_token, preprocess_args))
+        preprocess_args_with_keep = {**preprocess_args, "keep_all_columns": True}
+        datapipe = datapipe.map(lambda d: preprocess_datapoint(d, source_token, preprocess_args_with_keep))
     else:
         datapipe = datapipe.map(lambda x: json.loads(x[1]))
     return datapipe
